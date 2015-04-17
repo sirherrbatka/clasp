@@ -23,13 +23,13 @@
 	     (pm (llvm-sys:make-pass-manager))
 	     (tli #+(or)(llvm-sys:make-target-library-info-wrapper-pass triple #||LLVM3.7||#)
 		  (llvm-sys:make-target-library-info triple #|| LLVM3.6||#))
-	     (data-layout-pass (llvm-sys:make-data-layout-pass))
+;;	     (data-layout-pass (llvm-sys:make-data-layout-pass))
 	     (target-subtarget-info (llvm-sys:get-subtarget-impl target-machine))
 	     (data-layout (llvm-sys:get-data-layout target-subtarget-info))
 	     )
 	(if data-layout (llvm-sys:set-data-layout module data-layout))
 	(llvm-sys:pass-manager-add pm tli)
-	(llvm-sys:pass-manager-add pm data-layout-pass)
+;;	(llvm-sys:pass-manager-add pm data-layout-pass)
 	(llvm-sys:add-passes-to-emit-file-and-run-pass-manager target-machine pm output-stream file-type module)))))
 
 

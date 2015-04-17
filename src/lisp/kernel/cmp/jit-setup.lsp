@@ -82,10 +82,7 @@ using features defined in corePackage.cc"
 
 (defvar *use-function-pass-manager-for-compile-file* t)
 (defun create-function-pass-manager-for-compile-file (module)
-  (let ((fpm (llvm-sys:make-function-pass-manager module))
-        ;;        (data-layout-pass (llvm-sys:make-data-layout-pass *data-layout*))
-        )
-;;    (llvm-sys:function-pass-manager-add fpm data-layout-pass) ;; (llvm-sys:data-layout-copy *data-layout*))
+  (let ((fpm (llvm-sys:make-function-pass-manager module)))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-basic-alias-analysis-pass))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-instruction-combining-pass))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-promote-memory-to-register-pass))
@@ -98,10 +95,7 @@ using features defined in corePackage.cc"
 
 
 (defun create-function-pass-manager-for-compile (module)
-  (let ((fpm (llvm-sys:make-function-pass-manager module))
-;;        (data-layout-pass (llvm-sys:make-data-layout-pass *data-layout*))
-        )
-;;    (llvm-sys:function-pass-manager-add fpm data-layout-pass)
+  (let ((fpm (llvm-sys:make-function-pass-manager module)))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-basic-alias-analysis-pass))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-instruction-combining-pass))
     (llvm-sys:function-pass-manager-add fpm (llvm-sys:create-promote-memory-to-register-pass))
@@ -183,7 +177,8 @@ No DIBuilder is defined for the default module")
 								       'llvm-sys:internal-linkage
 								       constant-data-array
 								       "constant-array"))
-	 (gep (llvm-sys:constant-expr-get-in-bounds-get-element-ptr global-var-for-constant-array
+	 (gep (llvm-sys:constant-expr-get-in-bounds-get-element-ptr constant-data-array-type
+                                                                    global-var-for-constant-array
 								    (list (jit-constant-i32 0) (jit-constant-i32 0)))))
     gep))
 
@@ -220,11 +215,20 @@ No DIBuilder is defined for the default module")
 (defun jit-make-global-string-ptr (str &optional (label "global-str"))
   "A function for creating unique strings within the module - return an LLVM pointer to the string"
   (or *the-module* (error "jit-make-global-string-ptr *the-module* is NIL"))
-  (let ((unique-string-global-variable (llvm-sys:get-or-create-uniqued-string-global-variable *the-module* str (bformat nil ":::global-str-%s" str))))
-;;    (llvm-sys:create-in-bounds-gep *irbuilder* unique-string-global-variable (list (jit-constant-i32 0) (jit-constant-i32 0)) label )
-    (llvm-sys:constant-expr-get-in-bounds-get-element-ptr unique-string-global-variable (list (jit-constant-i32 0) (jit-constant-i32 0)))
-    )
-)
+  (let* ((unique-string-global-variable (llvm-sys:get-or-create-uniqued-string-global-variable *the-module* str (bformat nil ":::global-str-%s" str)))
+         (var-type (llvm-sys:get-type unique-string-global-variable))
+         (scalar-type (llvm-sys:get-scalar-type var-type))
+         (element-type (llvm-sys:get-sequential-element-type scalar-type)))
+    ;;    (llvm-sys:create-in-bounds-gep *irbuilder* unique-string-global-variable (list (jit-constant-i32 0) (jit-constant-i32 0)) label )
+    (bformat t "jit-make-global-string-ptr:  var-type = %s\n" var-type)
+    (bformat t "jit-make-global-string-ptr:  element-type = %s\n" element-type)
+    (let ((ret
+           (llvm-sys:constant-expr-get-in-bounds-get-element-ptr element-type
+                                                                 unique-string-global-variable
+                                                                 (list (jit-constant-i32 0)
+                                                                       (jit-constant-i32 0)))))
+      (bformat t "Returning!!!!!!!!!! ret = %s\n" ret)
+      ret)))
 
 
 

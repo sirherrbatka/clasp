@@ -144,7 +144,7 @@ namespace llvmo
     private:
 	typedef llvm::DIScope OtherType;
     public:
-	virtual operator llvm::DIDescriptor* () { return this;};
+	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
 	DIScope_O(const OtherType& val) : llvm::DIScope(val) {};
 	DIScope_O() {};
 	virtual ~DIScope_O() {}
@@ -247,7 +247,7 @@ namespace llvmo
 	typedef llvm::DITypeArray OtherType;
     public:
 	DITypeArray_O(const OtherType& val) : llvm::DITypeArray(val) {};
-	DITypeArray_O() : Base() {};
+	DITypeArray_O() : llvm::DITypeArray(NULL) {};
 	virtual ~DITypeArray_O() {}
 
     }; // DITypeArray_O
@@ -299,7 +299,7 @@ namespace llvmo
 	typedef llvm::DIFile OtherType;
     private:
     public:
-	virtual operator llvm::DIDescriptor* () { return this;};
+	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
 	DIFile_O() : Base() {};
 	DIFile_O(const llvm::DIFile& val) : llvm::DIFile(val) {};
 	virtual ~DIFile_O() {}
@@ -345,7 +345,7 @@ namespace llvmo
 	typedef llvm::DISubprogram OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
 	DISubprogram_O() : Base() {};
 	DISubprogram_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DISubprogram_O() {}
@@ -402,7 +402,7 @@ namespace llvmo
 	typedef llvm::DIType OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
  	virtual operator llvm::DIType* () { return this;};
 	DIType_O() : Base() {};
 	DIType_O(const OtherType& val) : OtherType(val) {};
@@ -450,8 +450,8 @@ namespace llvmo
 	typedef llvm::DIDerivedType OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
- 	virtual operator llvm::DIType* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
+ 	virtual operator llvm::DIType* () { return (llvm::DIType*)this;};
 	DIDerivedType_O() : Base() {};
 	DIDerivedType_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DIDerivedType_O() {}
@@ -500,8 +500,8 @@ namespace llvmo
 	typedef llvm::DIBasicType OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
- 	virtual operator llvm::DIType* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
+ 	virtual operator llvm::DIType* () { return (llvm::DIType*)this;};
 	DIBasicType_O() : Base() {};
 	DIBasicType_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DIBasicType_O() {}
@@ -555,8 +555,8 @@ namespace llvmo
 	typedef llvm::DICompositeType OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
- 	virtual operator llvm::DIType* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
+ 	virtual operator llvm::DIType* () { return (llvm::DIType*)this;};
 	DICompositeType_O() : Base() {};
 	DICompositeType_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DICompositeType_O() {}
@@ -606,9 +606,9 @@ namespace llvmo
     private:
     public:
         //! Provide a convertor for every type this might be cast to
- 	virtual operator llvm::DIDescriptor* () { return this;};
- 	virtual operator llvm::DIType* () { return this;};
- 	virtual operator llvm::DICompositeType* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
+ 	virtual operator llvm::DIType* () { return (llvm::DIType*)this;};
+ 	virtual operator llvm::DICompositeType* () { return (llvm::DICompositeType*)this;};
 	DISubroutineType_O() : Base() {};
 	DISubroutineType_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DISubroutineType_O() {}
@@ -657,7 +657,7 @@ namespace llvmo
 	typedef llvm::DILexicalBlock OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
 	DILexicalBlock_O() : Base() {};
 	DILexicalBlock_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DILexicalBlock_O() {}
@@ -706,7 +706,7 @@ namespace llvmo
 	typedef llvm::DICompileUnit OtherType;
     private:
     public:
- 	virtual operator llvm::DIDescriptor* () { return this;};
+ 	virtual operator llvm::DIDescriptor* () { return (llvm::DIDescriptor*)this;};
 	DICompileUnit_O() : Base() {};
 	DICompileUnit_O(const OtherType& val) : OtherType(val) {};
 	virtual ~DICompileUnit_O() {}

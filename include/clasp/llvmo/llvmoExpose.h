@@ -50,10 +50,10 @@ THE SOFTWARE.
 #include <llvm/Transforms/IPO/PassManagerBuilder.h>
 #include <llvm/ADT/Triple.h>
 #include <llvm/Support/TargetSelect.h>
-#if 1 // LLVM3.6
+#if 0 // LLVM3.6
 #include <llvm/Target/TargetLibraryInfo.h>
 #else // LLVM3.7
-//#include <llvm/Analysis/TargetLibraryInfo.h>
+#include <llvm/Analysis/TargetLibraryInfo.h>
 #endif
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/IR/Instructions.h>
@@ -1648,7 +1648,7 @@ namespace llvmo
 	virtual ~ConstantExpr_O() {};
     public:
 
-	static Constant_sp getInBoundsGetElementPtr(Constant_sp constant, core::Cons_sp idxList );
+	static Constant_sp getInBoundsGetElementPtr(Type_sp ttype, Constant_sp constant, core::Cons_sp idxList );
 
 
     }; // ConstantExpr_O
@@ -1959,13 +1959,15 @@ namespace translate
 
 
 
+#if 0   // llvm3.6  
+// DataLayoutPass was removed in llvm3.7
 
 namespace llvmo
 {
     FORWARD(DataLayoutPass);
-    class DataLayoutPass_O : public ImmutablePass_O
+    c l a s s DataLayoutPass_O : public ImmutablePass_O
     {
-        LISP_EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::DataLayoutPass,DataLayoutPass_O,"DataLayoutPass",ImmutablePass_O);
+        L I S P _EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::DataLayoutPass,DataLayoutPass_O,"DataLayoutPass",ImmutablePass_O);
         typedef llvm::DataLayoutPass ExternalType;
         typedef llvm::DataLayoutPass* PointerToExternalType;
     public:
@@ -2026,16 +2028,16 @@ namespace translate
 };
 ;
 
+#endif // DataLayoutPass_O
 
-
-#if 1
+#if 0
 // LLVM3.6
 namespace llvmo
 {
     FORWARD(TargetLibraryInfo);
-    class TargetLibraryInfo_O : public ImmutablePass_O
+    c l a s s TargetLibraryInfo_O : public ImmutablePass_O
     {
-        LISP_EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::TargetLibraryInfo,TargetLibraryInfo_O,"TargetLibraryInfo",ImmutablePass_O);
+        L I S P _EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::TargetLibraryInfo,TargetLibraryInfo_O,"TargetLibraryInfo",ImmutablePass_O);
         typedef llvm::TargetLibraryInfo ExternalType;
         typedef llvm::TargetLibraryInfo* PointerToExternalType;
     public:
@@ -2092,9 +2094,9 @@ namespace translate
 namespace llvmo
 {
     FORWARD(TargetLibraryInfoWrapperPass);
-    c l a s s TargetLibraryInfoWrapperPass_O : public ImmutablePass_O
+    class TargetLibraryInfoWrapperPass_O : public ImmutablePass_O
     {
-        L I S P _EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::TargetLibraryInfoWrapperPass,TargetLibraryInfoWrapperPass_O,"TargetLibraryInfoWrapperPass",ImmutablePass_O);
+        LISP_EXTERNAL_CLASS(llvmo,LlvmoPkg,llvm::TargetLibraryInfoWrapperPass,TargetLibraryInfoWrapperPass_O,"TargetLibraryInfoWrapperPass",ImmutablePass_O);
         typedef llvm::TargetLibraryInfoWrapperPass ExternalType;
         typedef llvm::TargetLibraryInfoWrapperPass* PointerToExternalType;
     public:

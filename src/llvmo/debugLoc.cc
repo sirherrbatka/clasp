@@ -74,7 +74,7 @@ namespace llvmo
 
     MDNode_sp DebugLoc_O::getScope(LLVMContext_sp context) const
     {_G();
-	return translate::to_object<llvm::MDNode*>::convert(this->_DebugLoc.getScope(*(context->wrappedPtr())));
+	return translate::to_object<llvm::MDNode*>::convert(this->_DebugLoc.getScope(/* *(context->wrappedPtr()) */));
     }
 
 };

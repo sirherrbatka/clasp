@@ -149,7 +149,7 @@ public:
                                                                               Diagnostics* Error);
 
 private:
-    Registry() LLVM_DELETED_FUNCTION;
+    Registry() = delete; // llvm3.6   LLVM_DELETED_FUNCTION;
 };
 
 

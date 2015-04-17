@@ -489,11 +489,11 @@ namespace llvmo
 	    } else if ( DebugInfo_sp di = oCar(cur).asOrNull<DebugInfo_O>() )
 	    {
 //			printf("      getting DIDescriptor*\n");
-		llvm::DIDescriptor* didescriptor = di->operator llvm::DIDescriptor*();
+		llvm::DIDescriptor* didescriptor = (llvm::DIDescriptor*)(*di);
 //			printf("      convert DIDescrptor* to MDNode* --> %p\n", didescriptor );
-		llvm::MDNode* mdnode_didescriptor = *didescriptor;
+		llvm::Metadata* metadata_didescriptor = (llvm::Metadata*)didescriptor;
 //			printf("      push_back mdnode_didescriptor --> %p\n", mdnode_didescriptor );
-		vector_values.push_back(mdnode_didescriptor);
+		vector_values.push_back(metadata_didescriptor);
 	    } else
 	    {
 		SIMPLE_ERROR(BF("Handle conversion of %s to llvm::Value*") % _rep_(oCar(cur)) );

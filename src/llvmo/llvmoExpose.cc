@@ -339,11 +339,12 @@ namespace llvmo
 	if ( stream.nilp() ) {
 	    SIMPLE_ERROR(BF("You must pass a valid stream"));
 	}
-	llvm::raw_ostream* ostreamP;
+	llvm::raw_pwrite_stream* ostreamP;
 	std::string stringOutput;
 	bool stringOutputStream = false;
 	if ( core::StringOutputStream_sp sos = stream.asOrNull<core::StringOutputStream_O>() ) {
-	    ostreamP = new llvm::raw_string_ostream(stringOutput);
+            IMPLEMENT_MEF(BF("How do I handle raw_pwrite_stream!!!!!!"));
+//	    ostreamP = new llvm::raw_string_ostream(stringOutput);
 	    stringOutputStream = true;
 	} else if ( core::IOFileStream_sp fs = stream.asOrNull<core::IOFileStream_O>() ) {
 	    ostreamP = new llvm::raw_fd_ostream(fs->fileDescriptor(),false,true);
@@ -353,8 +354,8 @@ namespace llvmo
 	} else {
 	    SIMPLE_ERROR(BF("Illegal file type %s for addPassesToEmitFileAndRunPassManager") % _rep_(stream));
 	}
-	llvm::formatted_raw_ostream FOS(*ostreamP,false);
-	if (this->wrappedPtr()->addPassesToEmitFile(*passManager->wrappedPtr(),FOS,FileType,true,nullptr,nullptr) ) {
+//	llvm::formatted_raw_stream FOS(*ostreamP);
+	if (this->wrappedPtr()->addPassesToEmitFile(*passManager->wrappedPtr(),*ostreamP,FileType,true,nullptr,nullptr) ) {
 	    delete ostreamP;
 	    SIMPLE_ERROR(BF("Could not generate file type"));
 	}
@@ -916,7 +917,7 @@ namespace llvmo
     void Metadata_O::exposeCando(core::Lisp_sp lisp)
     {_G();
 	core::externalClass_<Metadata_O>()
-	    .def("dump", &llvm::Metadata::dump)
+//                .def("dump", &llvm::Metadata::dump)
 	    ;
     };
 
@@ -1381,7 +1382,7 @@ namespace llvmo
 	    .def("moduleDelete",&Module_O::moduleDelete)
 	    .def("setTargetTriple",&llvm::Module::setTargetTriple)
 	    .def("getTargetTriple",&llvm::Module::getTargetTriple)
-	    .def("setDataLayout",(void (Module::*)(const DataLayout*))&llvm::Module::setDataLayout)
+	    .def("setDataLayout",(void (Module::*)(const DataLayout&))&llvm::Module::setDataLayout)
 	    ;
 	core::af_def(LlvmoPkg,"make-Module",&Module_O::make,ARGS_Module_O_make,DECL_Module_O_make,DOCS_Module_O_make);
 	SYMBOL_EXPORT_SC_(LlvmoPkg,verifyModule);
@@ -1467,15 +1468,10 @@ namespace llvmo
 					  StrConstant);
 	    GV->setName(name);
 	    GV->setUnnamedAddr(true);
-//	    GlobalVariableStringHolder holder;
             core::Str_sp first = core::Str_O::create(value);
             GlobalVariable_sp second = core::RP_Create_wrapped<GlobalVariable_O,llvm::GlobalVariable*>(GV);
             core::Cons_sp pair = core::Cons_O::create(first,second);
             this->_UniqueGlobalVariableStrings->setf_gethash(nameKey,pair);
-//	    holder._String = value;
-//	    holder._LlvmValue = core::RP_Create_wrapped<GlobalVariable_O,llvm::GlobalVariable*>(GV);
-//	    this->_UniqueGlobalVariableStrings[name] = holder;
-//	    return holder._LlvmValue;
             return second;
 	}
 	if ( oCar(it).as<core::Str_O>()->get() != value ) // as<Str_Oit->second._String != value )
@@ -1654,7 +1650,6 @@ namespace llvmo
     };
 }; // llvmo
 
-
 namespace llvmo
 {
     EXPOSE_CLASS(llvmo,TargetSubtargetInfo_O);
@@ -1662,7 +1657,7 @@ namespace llvmo
     void TargetSubtargetInfo_O::exposeCando(core::Lisp_sp lisp)
     {_G();
 	core::externalClass_<TargetSubtargetInfo_O>()
-	    .def("getDataLayout",&llvm::TargetSubtargetInfo::getDataLayout)
+//	    .def("getDataLayout",&llvm::TargetSubtargetInfo::getDataLayout)
 	    ;
     };
 
@@ -1710,7 +1705,7 @@ namespace llvmo
 
 
 
-
+#if 0
 namespace llvmo
 {
     EXPOSE_CLASS(llvmo,DataLayoutPass_O);
@@ -1737,9 +1732,9 @@ namespace llvmo
 	IMPLEMENT_ME();
     };
 }; // llvmo
+#endif
 
-
-#if 1
+#if 0
 // LLVM 3.6
 namespace llvmo
 {
@@ -2272,7 +2267,7 @@ namespace llvmo
 {
 
 
-    Constant_sp ConstantExpr_O::getInBoundsGetElementPtr(Constant_sp constant, core::Cons_sp idxList )
+    Constant_sp ConstantExpr_O::getInBoundsGetElementPtr(Type_sp ttype, Constant_sp constant, core::Cons_sp idxList )
     {_G();
         GC_ALLOCATE(Constant_O,res );
 	vector<llvm::Constant*> vector_IdxList;
@@ -2281,7 +2276,7 @@ namespace llvmo
 	    vector_IdxList.push_back(oCar(cur).as<Constant_O>()->wrappedPtr());
 	}
 	llvm::ArrayRef<llvm::Constant*> array_ref_vector_IdxList(vector_IdxList);
-	llvm::Constant* llvm_res = llvm::ConstantExpr::getInBoundsGetElementPtr(constant->wrappedPtr(),array_ref_vector_IdxList);
+	llvm::Constant* llvm_res = llvm::ConstantExpr::getInBoundsGetElementPtr(ttype->wrappedPtr(),constant->wrappedPtr(),array_ref_vector_IdxList);
 	res->set_wrapped(llvm_res);
 	return res;
     }
@@ -3534,7 +3529,7 @@ namespace llvmo
 	    .def("CreateFence",&IRBuilder_O::ExternalType::CreateFence)
 	    .def("CreateAtomicCmpXchg",&IRBuilder_O::ExternalType::CreateAtomicCmpXchg)
 	    .def("CreateAtomicRMW",&IRBuilder_O::ExternalType::CreateAtomicRMW)
-	    .def("CreateConstGEP1-32",&IRBuilder_O::ExternalType::CreateConstGEP1_32)
+//	    .def("CreateConstGEP1-32",&IRBuilder_O::ExternalType::CreateConstGEP1_32)
 	    .def("CreateConstInBoundsGEP1-32",&IRBuilder_O::ExternalType::CreateConstInBoundsGEP1_32)
 	    .def("CreateConstGEP2-32",&IRBuilder_O::ExternalType::CreateConstGEP2_32)
 	    .def("CreateConstInBoundsGEP2-32",&IRBuilder_O::ExternalType::CreateConstInBoundsGEP2_32)
@@ -3618,7 +3613,7 @@ namespace llvmo
 	    .def("CreateVAArg",&IRBuilder_O::ExternalType::CreateVAArg)
 	    .def("CreateExtractElement",&IRBuilder_O::ExternalType::CreateExtractElement)
 	    .def("CreateInsertElement",&IRBuilder_O::ExternalType::CreateInsertElement)
-	    .def("CreateShuffleVector",&IRBuilder_O::ExternalType::CreateShuffleVector)
+//	    .def("CreateShuffleVector",&IRBuilder_O::ExternalType::CreateShuffleVector)
 	    .def("CreateLandingPad",&IRBuilder_O::ExternalType::CreateLandingPad)
 	    .def("CreateIsNull",&IRBuilder_O::ExternalType::CreateIsNull)
 	    .def("CreateIsNotNull",&IRBuilder_O::ExternalType::CreateIsNotNull)
@@ -3994,6 +3989,7 @@ namespace llvmo
 	core::externalClass_<Type_O>()
 	    .def("dump",&llvm::Type::dump)
 	    .def("type-get-pointer-to",&Type_O::getPointerTo,ARGS_PointerType_O_getPointerTo,DECL_PointerType_O_getPointerTo,DOCS_PointerType_O_getPointerTo)
+            .def("getScalarType",(llvm::Type*(llvm::Type::*)())&llvm::Type::getScalarType)
             .def("getArrayNumElements", &Type_O::getArrayNumElements)
             .def("getSequentialElementType",&llvm::Type::getSequentialElementType)
 	    ;
@@ -4222,6 +4218,7 @@ namespace llvmo
     void SequentialType_O::exposeCando(core::Lisp_sp lisp)
     {_G();
 	core::externalClass_<SequentialType_O>()
+//            .def("getElementType",&llvm::SequentialType::getElementType)
 	    ;
     };
 
