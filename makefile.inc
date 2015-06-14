@@ -72,7 +72,7 @@ sub-scrape-classes:
 
 #
 # I want everything about the build defined here
-# 
+#
 
 #
 # BOOST_VERSION is defined in the startup script development.xxxx
@@ -423,7 +423,7 @@ ifeq ($(DEVELOPMENT_ENVIRONMENT),Windows_NT)
     export LIB_DIR = $(OS_BUILDTOP)/lib
     export WIN_LIB_DIR = $(shell cygpath -w $(LIB_DIR))
     export WIN_BOOST_LIB_DIR = $(WIN_LIB_DIR)
-    export EXTERNAL_LIBS = -L$(LIBRARY_DIR)/lib 
+    export EXTERNAL_LIBS = -L$(LIBRARY_DIR)/lib
     export EXTERNAL_LIBS+= -L/usr/local/lib
     export EXTERNAL_LIBS+= -lboost_python
     export EXTERNAL_LIBS+= -lboost_filesystem
@@ -545,7 +545,7 @@ $(core_DATABASE_DIR):
 
 
 directories:
-	make 
+	make
 
 
 dox:

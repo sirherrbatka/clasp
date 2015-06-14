@@ -29,6 +29,7 @@ THE SOFTWARE.
 
 #include <clasp/core/clasp_gmpxx.h>
 #include <math.h>
+#include <stdint.h>
 #include <limits.h>
 #pragma GCC diagnostic push
 //#pragma GCC diagnostic ignored "-Wunused-local-typedef"
@@ -150,7 +151,6 @@ public:
   static Number_sp create(double val);
   static Number_sp create(int val);
   static Number_sp create(uint val);
-  //	static Number_sp create(size_t val);
 public:
   virtual NumberType number_type_() const { SUBIMP(); };
   //	int number_type_int() const { return (int)(clasp_t_of(this->asSmartPtr()));;};
@@ -274,7 +274,7 @@ public:
   static T_sp makeIntegerType(int low, int high);
   static Integer_sp create(const mpz_class &v);
   static Integer_sp create(gctools::Fixnum v);
-  static inline Integer_sp create(size_t v) { return Integer_O::create((gctools::Fixnum)v); };
+  static Integer_sp create(uint64_t v);
   static inline Integer_sp create(int v) { return Integer_O::create((gctools::Fixnum)v); };
   static inline Integer_sp create(uint v) { return Integer_O::create((gctools::Fixnum)v); };
   //	static Integer_sp create(int v);
@@ -288,7 +288,6 @@ public:
   };
 //	static Integer_sp create(size_t v); // unsigned
 //	static Integer_sp create(uint v);
-  static Integer_sp create(uint64_t v);
   static Integer_sp create(float f);
   static Integer_sp create(double f);
   static Integer_sp createLongFloat(LongFloat f);
@@ -1260,11 +1259,11 @@ inline unsigned long long clasp_to_unsigned_long_long(Integer_sp i) {
       return f;
     }
     TYPE_ERROR(i, Cons_O::createList(cl::_sym_Integer_O, make_fixnum(0),
-                                     Integer_O::create(gc::most_positive_unsigned_long_long)));
+                                     Integer_O::create((gc::Fixnum)gc::most_positive_unsigned_long_long)));
   }
   return i->as_unsigned_long_long_();
 };
- 
+
 inline Fixnum clasp_to_fixnum(Fixnum_sp i) {
   if (i.fixnump()) {
     gc::Fixnum f = i.unsafe_fixnum();
@@ -1379,7 +1378,7 @@ inline bool clasp_float_nan_p(Float_sp num)
    }
    return num->isnan_();
  }
- 
+
 inline bool clasp_float_infinity_p(Float_sp num)
  {
    if ( num.single_floatp() ) {
@@ -1388,7 +1387,7 @@ inline bool clasp_float_infinity_p(Float_sp num)
    }
    return num->isnan_();
  }
-   
+
 
 };
 
