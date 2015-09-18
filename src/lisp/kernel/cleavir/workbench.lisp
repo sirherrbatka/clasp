@@ -34,7 +34,7 @@
     (time (require :clasp-cleavir))
     (format t "Loading inline.lisp~%")
     (load "sys:kernel;cleavir;inline.lisp")
-    (print (core:getpid))))
+    (print (core:getpid)))
   (load "sys:kernel;cleavir;auto-compile.lisp"))
 
 (progn ;; Set up everything for building cclasp from bclasp
@@ -45,6 +45,11 @@
   (format t "Loading :clasp-cleavir system~%")
   (time (require :clasp-cleavir))
   (load "sys:kernel;cleavir;inline.lisp"))
+
+
+(trace remove-documentation)
+
+(multiple-value-bind (body doc) (remove-documentation '("Hello there" '(member nil t))) (list :body body :doc doc))
 
 
 (defparameter *a* 1)
@@ -2064,3 +2069,6 @@ cmp::*dbg-generate-dwarf*
                  99)))
      (print Y))
    ) :debug t)
+
+
+(deftype boolean () '(member nil t))

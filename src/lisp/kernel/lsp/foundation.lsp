@@ -334,7 +334,7 @@ the corresponding VAR.  Returns NIL."
 	  (let ((vars (cadr whole))
 		(form (caddr whole))
 		(body (cdddr whole)))
-	  `(core::multiple-value-call #'(lambda (&optional ,@(mapcar #'list vars) &rest ,(gensym)) ,@body) ,form)))
+	  `(multiple-value-call #'(lambda (&optional ,@(mapcar #'list vars) &rest ,(gensym)) ,@body) ,form)))
       t)
 
 (defun warn (x &rest args)
